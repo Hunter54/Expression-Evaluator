@@ -11,7 +11,7 @@ using namespace std;
 
 namespace Expression{
 
-    string infixToPrefix(const string& infix);
+    string infixToPrefix(string infix);
     int evaluate(string expresion);
 }
 

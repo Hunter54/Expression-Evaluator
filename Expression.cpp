@@ -21,7 +21,7 @@ namespace Expression {
         }
     }
 
-    int Expression::evaluate(string expression) {
+    int evaluate(const string expression) {
 
         stack<char> operands;
         int a;
@@ -63,20 +63,21 @@ namespace Expression {
         }
     }
 
-    string infixToPrefix(const string &infix) {
 
+    string infixToPrefix(const string infix) {
+        // stack for operators.
         stack<char> operators;
 
         // stack for operands.
         stack<string> operands;
 
-        for (char i : infix) {
+        for (int i = 0; i < infix.length(); i++) {
 
             // If current character is an
             // opening bracket, then
             // push into the operators stack.
-            if (i == '(') {
-                operators.push(i);
+            if (infix[i] == '(') {
+                operators.push(infix[i]);
             }
 
                 // If current character is a
@@ -85,7 +86,7 @@ namespace Expression {
                 // in operands stack until
                 // matching opening bracket is
                 // not found.
-            else if (i == ')') {
+            else if (infix[i] == ')') {
                 while (!operators.empty() &&
                        operators.top() != '(') {
 
@@ -104,10 +105,7 @@ namespace Expression {
                     // Add operands and operator
                     // in form operator +
                     // operand1 + operand2.
-                    string tmp;
-                    tmp += op;
-                    tmp += op2;
-                    tmp += op1;
+                    string tmp = op + op2 + op1;
                     operands.push(tmp);
                 }
 
@@ -119,8 +117,15 @@ namespace Expression {
                 // If current character is an
                 // operand then push it into
                 // operands stack.
-            else if (!isOperator(i)) {
-                operands.push(string(1, i));
+            else if (!isOperator(infix[i])) {
+                string op;
+                while (infix[i] != '(' && infix[i] != ')' && !isOperator(infix[i])) {
+                    op += infix[i];
+                    i++;
+                }
+                i--;
+                operands.push(op);
+                //operands.push(string(1, infix[i]));
             }
 
                 // If current character is an
@@ -131,7 +136,7 @@ namespace Expression {
                 // result in operands stack.
             else {
                 while (!operators.empty() &&
-                       getPriority(i) <=
+                       getPriority(infix[i]) <=
                        getPriority(operators.top())) {
 
                     string op1 = operands.top();
@@ -143,14 +148,11 @@ namespace Expression {
                     char op = operators.top();
                     operators.pop();
 
-                    string tmp;
-                    tmp += op;
-                    tmp += op2;
-                    tmp += op1;
+                    string tmp = op + op2 + op1;
                     operands.push(tmp);
                 }
 
-                operators.push(i);
+                operators.push(infix[i]);
             }
         }
 
@@ -168,10 +170,7 @@ namespace Expression {
             char op = operators.top();
             operators.pop();
 
-            string tmp;
-            tmp += op;
-            tmp += op2;
-            tmp += op1;
+            string tmp = op + op2 + op1;
             operands.push(tmp);
         }
 
@@ -179,4 +178,5 @@ namespace Expression {
         // present in operands stack.
         return operands.top();
     }
+
 }
