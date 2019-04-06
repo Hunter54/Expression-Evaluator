@@ -9,7 +9,7 @@ int main() {
 
     string a;
     //"2*(50+21)-6/(30-25)+25"
-    a="2^1";
+    a="((12+32)*2)/5";
     cout<<infixToPrefix(a)<<endl;
     cout<<endl<<evaluate(infixToPrefix(a));
 

@@ -1,7 +1,6 @@
 //
 // Created by IONUT on 05.04.2019.
 //
-#include <iostream>
 #include "Parse_evaluate.h"
 
 namespace Expression {
@@ -17,8 +16,32 @@ namespace Expression {
         }
 
         bool isOperator(char c) {
-            return (!isalpha(c) && !isdigit(c) && c!=' ');
+            return (!isalpha(c) && !isdigit(c) && c != ' ');
         }
+
+        void add_to_operands(stack<string> *operands, stack<char> *operators) {
+            // operand 1
+            string op1 = operands->top();
+            operands->pop();
+
+            // operand 2
+            string op2 = operands->top();
+            operands->pop();
+
+            // operator
+            char op = operators->top();
+            operators->pop();
+
+            // Add operands and operator
+            // in form operator +
+            // operand1 + operand2.
+            string tmp;
+            tmp += op;
+            tmp += op2;
+            tmp += op1;
+            operands->push(tmp);
+        }
+
     }
 
     float evaluate(const string expression) {
@@ -27,7 +50,7 @@ namespace Expression {
         float a;
         float b;
         float near;
-        int n = expression.length()-1;
+        int n = expression.length() - 1;
         while (n >= 0) {
             if (isOperator(expression[n])) {
 
@@ -47,29 +70,28 @@ namespace Expression {
                         operands.push(a * b);
                         break;
                     case '/':
-                        operands.push((int)((a/b)*100.0)/100.0);
+                        operands.push((int) ((a / b) * 100.0) / 100.0);
                         break;
                     case '^': {
-                        near=1;
-                        if(b==0){
+                        near = 1;
+                        if (b == 0) {
                             operands.push(near);
-                            break;
+
+                        } else {
+                            near = a;
+                            for (int i = 1; i < b; i++) {
+                                near *= a;
+                            }
+                            operands.push(near);
                         }
-                        near=a;
-                        for (int i = 1; i < b; i++) {
-                            near *= a;
-                        }
-                        operands.push(near);
                         break;
                     }
                 }
 
-            } else if (!isOperator(expression[n]) && expression[n]!=' ') {
+            } else if (!isOperator(expression[n]) && expression[n] != ' ') {
                 string temp;
-//                temp+=expression[n];
-//                n--;
-                while(expression[n]!=' ' && !isOperator(expression[n])){
-                    temp=expression[n]+move(temp);
+                while (expression[n] != ' ' && !isOperator(expression[n])) {
+                    temp = expression[n] + move(temp);
                     n--;
                 }
                 operands.push(stof(temp));
@@ -107,26 +129,7 @@ namespace Expression {
                 while (!operators.empty() &&
                        operators.top() != '(') {
 
-                    // operand 1
-                    string op1 = operands.top();
-                    operands.pop();
-
-                    // operand 2
-                    string op2 = operands.top();
-                    operands.pop();
-
-                    // operator
-                    char op = operators.top();
-                    operators.pop();
-
-                    // Add operands and operator
-                    // in form operator +
-                    // operand1 + operand2.
-                    string tmp;
-                    tmp+=op;
-                    tmp+=op2;
-                    tmp+= op1;
-                    operands.push(tmp);
+                    add_to_operands(&operands, &operators);
                 }
 
                 // Pop opening bracket from
@@ -144,7 +147,7 @@ namespace Expression {
                     i++;
                 }
                 i--;
-                op+=' ';
+                op += ' ';
                 operands.push(op);
                 //operands.push(string(1, infix[i]));
             }
@@ -160,20 +163,7 @@ namespace Expression {
                        getPriority(infix[i]) <=
                        getPriority(operators.top())) {
 
-                    string op1 = operands.top();
-                    operands.pop();
-
-                    string op2 = operands.top();
-                    operands.pop();
-
-                    char op = operators.top();
-                    operators.pop();
-
-                    string tmp ;
-                    tmp+=op;
-                    tmp+=op2;
-                    tmp+= op1;
-                    operands.push(tmp);
+                    add_to_operands(&operands, &operators);
                 }
 
                 operators.push(infix[i]);
@@ -185,20 +175,8 @@ namespace Expression {
         // of each pop operation in
         // operands stack.
         while (!operators.empty()) {
-            string op1 = operands.top();
-            operands.pop();
 
-            string op2 = operands.top();
-            operands.pop();
-
-            char op = operators.top();
-            operators.pop();
-
-            string tmp;
-            tmp+=op;
-            tmp+=op2;
-            tmp+= op1;
-            operands.push(tmp);
+            add_to_operands(&operands, &operators);
         }
 
         // Final prefix expression is
