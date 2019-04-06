@@ -12,7 +12,7 @@ using namespace std;
 namespace Expression{
 
     string infixToPrefix(string infix);
-    int evaluate(string expresion);
+    float evaluate(string expresion);
 }
 
 #endif //EVALUATOR_PARSE_EVALUATE_H

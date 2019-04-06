@@ -1,7 +1,7 @@
 //
 // Created by IONUT on 05.04.2019.
 //
-
+#include <iostream>
 #include "Parse_evaluate.h"
 
 namespace Expression {
@@ -17,16 +17,17 @@ namespace Expression {
         }
 
         bool isOperator(char c) {
-            return (!isalpha(c) && !isdigit(c));
+            return (!isalpha(c) && !isdigit(c) && c!=' ');
         }
     }
 
-    int evaluate(const string expression) {
+    float evaluate(const string expression) {
 
-        stack<char> operands;
-        int a;
-        int b;
-        int n = expression.length();
+        stack<float> operands;
+        float a;
+        float b;
+        float near;
+        int n = expression.length()-1;
         while (n >= 0) {
             if (isOperator(expression[n])) {
 
@@ -46,21 +47,37 @@ namespace Expression {
                         operands.push(a * b);
                         break;
                     case '/':
-                        operands.push(a / b);
+                        operands.push((int)((a/b)*100.0)/100.0);
                         break;
                     case '^': {
-                        for (int i = 0; i < b; i++) {
-                            a += a;
+                        near=1;
+                        if(b==0){
+                            operands.push(near);
+                            break;
                         }
-                        operands.push(a);
+                        near=a;
+                        for (int i = 1; i < b; i++) {
+                            near *= a;
+                        }
+                        operands.push(near);
                         break;
                     }
                 }
 
-            } else if (!isOperator(expression[n])) {
-
+            } else if (!isOperator(expression[n]) && expression[n]!=' ') {
+                string temp;
+//                temp+=expression[n];
+//                n--;
+                while(expression[n]!=' ' && !isOperator(expression[n])){
+                    temp=expression[n]+move(temp);
+                    n--;
+                }
+                operands.push(stof(temp));
+                n++;
             }
+            n--;
         }
+        return operands.top();
     }
 
 
@@ -105,7 +122,10 @@ namespace Expression {
                     // Add operands and operator
                     // in form operator +
                     // operand1 + operand2.
-                    string tmp = op + op2 + op1;
+                    string tmp;
+                    tmp+=op;
+                    tmp+=op2;
+                    tmp+= op1;
                     operands.push(tmp);
                 }
 
@@ -124,6 +144,7 @@ namespace Expression {
                     i++;
                 }
                 i--;
+                op+=' ';
                 operands.push(op);
                 //operands.push(string(1, infix[i]));
             }
@@ -148,7 +169,10 @@ namespace Expression {
                     char op = operators.top();
                     operators.pop();
 
-                    string tmp = op + op2 + op1;
+                    string tmp ;
+                    tmp+=op;
+                    tmp+=op2;
+                    tmp+= op1;
                     operands.push(tmp);
                 }
 
@@ -170,7 +194,10 @@ namespace Expression {
             char op = operators.top();
             operators.pop();
 
-            string tmp = op + op2 + op1;
+            string tmp;
+            tmp+=op;
+            tmp+=op2;
+            tmp+= op1;
             operands.push(tmp);
         }
 
