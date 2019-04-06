@@ -19,12 +19,13 @@ namespace Expression {
             return (!isalpha(c) && !isdigit(c) && c != ' ');
         }
 
+        //Function that merges operators and operands
+        //stack in a prefix way when conditions are met
+        //in the conversion function
         void add_to_operands(stack<string> *operands, stack<char> *operators) {
-            // operand 1
             string op1 = operands->top();
             operands->pop();
 
-            // operand 2
             string op2 = operands->top();
             operands->pop();
 
@@ -33,8 +34,7 @@ namespace Expression {
             operators->pop();
 
             // Add operands and operator
-            // in form operator +
-            // operand1 + operand2.
+            // in prefix form
             string tmp;
             tmp += op;
             tmp += op2;
@@ -52,6 +52,12 @@ namespace Expression {
         float near;
         int n = expression.length() - 1;
         while (n >= 0) {
+
+            //if a operator is reached
+            //pop two elements from the Stack
+            //Operate on these elements
+            //according to the operator, and push the result
+            //back to the Stack
             if (isOperator(expression[n])) {
 
                 a = operands.top();
@@ -90,8 +96,12 @@ namespace Expression {
 
             } else if (!isOperator(expression[n]) && expression[n] != ' ') {
                 string temp;
+                //if an operand is reached, the program
+                // will go until it reaches a white space
+                //(the number delimiter) or operator
+                //then it will push the number in operand stack
                 while (expression[n] != ' ' && !isOperator(expression[n])) {
-                    temp = expression[n] + move(temp);
+                    temp.insert(0,string(1,expression[n]));
                     n--;
                 }
                 operands.push(stof(temp));
@@ -179,8 +189,7 @@ namespace Expression {
             add_to_operands(&operands, &operators);
         }
 
-        // Final prefix expression is
-        // present in operands stack.
+        // return final prefix expression
         return operands.top();
     }
 
