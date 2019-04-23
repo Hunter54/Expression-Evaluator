@@ -5,6 +5,7 @@
 
 namespace Expression {
     namespace {
+
         int getPriority(char C) {
             if (C == '-' || C == '+')
                 return 1;
@@ -120,7 +121,7 @@ namespace Expression {
         // stack for operands.
         stack<string> operands;
 
-        for (int i = 0; i < infix.length(); i++) {
+        for (unsigned int i = 0; i < infix.length(); i++) {
 
             // If current character is an
             // opening bracket, then
@@ -142,8 +143,7 @@ namespace Expression {
                     add_to_operands(&operands, &operators);
                 }
 
-                // Pop opening bracket from
-                // stack.
+                // Pop opening bracket from stack.
                 operators.pop();
             }
 
@@ -159,7 +159,6 @@ namespace Expression {
                 i--;
                 op += ' ';
                 operands.push(op);
-                //operands.push(string(1, infix[i]));
             }
 
                 // If current character is an
