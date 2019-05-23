@@ -52,6 +52,7 @@ namespace Expression {
         float b;
         float near;
         int n = expression.length() - 1;
+        //Step through the expression starting from the beginning
         while (n >= 0) {
 
             //if a operator is reached
@@ -102,7 +103,7 @@ namespace Expression {
                 //(the number delimiter) or operator
                 //then it will push the number in operand stack
                 while (expression[n] != ' ' && !isOperator(expression[n])) {
-                    temp.insert(0,string(1,expression[n]));
+                    temp.insert(0, string(1, expression[n]));
                     n--;
                 }
                 operands.push(stof(temp));
@@ -135,7 +136,7 @@ namespace Expression {
                 // both stacks and push result
                 // in operands stack until
                 // matching opening bracket is
-                // not found.
+                // found.
             else if (infix[i] == ')') {
                 while (!operators.empty() &&
                        operators.top() != '(') {

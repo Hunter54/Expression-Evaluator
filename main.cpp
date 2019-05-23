@@ -2,9 +2,9 @@
 #include <stack>
 #include "Parse_evaluate.h"
 #include <string>
-#include <math.h>
+
 using namespace std;
-using namespace Expression;
+
 int main() {
 
     string a;
@@ -15,6 +15,7 @@ int main() {
         cout<<"\n 1-Enter new expression:";
         cout<<"\n 2-Parse to prefix notation";
         cout<<"\n 3-Evaluate expression";
+        cout<<"\n 4-Display expression";
         cout<<"\n 0-Exit\n";
         cout<<"\n\nYour option: ";
 
@@ -27,11 +28,25 @@ int main() {
             }
             case 2:{
 
-                cout<<"Prefix notation of the expression is: "<<infixToPrefix(a);
+                if(a.empty()){
+                    cout<<"No expression to parse";
+                }
+                else {
+                    cout << "Prefix notation of the expression is: " << Expression::infixToPrefix(a);
+                }
                 break;
             }
             case 3:{
-                cout<<"Expression value is: "<<evaluate(infixToPrefix(a));
+                if(a.empty()){
+                    cout<<"No expression to evaluate";
+                }
+                else {
+                    cout << "Expression value is: " << Expression::evaluate(Expression::infixToPrefix(a));
+                }
+                break;
+            }
+            case 4:{
+                cout<<"Expression is :"<<a;
                 break;
             }
             case 0:{
